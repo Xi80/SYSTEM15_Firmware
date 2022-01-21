@@ -32,22 +32,22 @@ void decode_midi_cc(void);			/*CCÇÃâì«*/
 #define MSG_PC			0xC0
 #define MSG_PB			0xE0
 
-#define CC_MOD			0x01;
-#define CC_DE_MSB		0x06;
-#define CC_VOL			0x07;
-#define CC_EXP			0x0B;
-#define CC_HOLD			0x40;
-#define CC_RPN_LSB		0x64;
-#define CC_RPN_MSB		0x65;
+#define CC_MOD			0x01
+#define CC_DE_MSB		0x06
+#define CC_VOL			0x07
+#define CC_EXP			0x0B
+#define CC_HOLD			0x40
+#define CC_RPN_LSB		0x64
+#define CC_RPN_MSB		0x65
 
 #define CC_ASO			0x78
 #define CC_RAC			0x79
 #define CC_ANO			0x7B
 
-#define EX_GS			0x01;
-#define EX_88			0x02;
-#define EX_XG			0x03;
-#define EX_GM			0x04;
+#define EX_GS			0x01
+#define EX_88			0x02
+#define EX_XG			0x03
+#define EX_GM			0x04
 
 /*ÉOÉçÅ[ÉoÉãïœêî*/
 

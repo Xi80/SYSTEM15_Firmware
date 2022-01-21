@@ -22,6 +22,10 @@ void mgr_note_off(uint8_t ch,uint8_t note){
 void mgr_program_change(uint8_t ch ,uint8_t val){
 	xprintf("PROGRAM CHANGE:ch%d val%d\n",ch,val);	
 }
+
+void mgr_pitchbend_sensitivity(uint8_t ch,uint8_t val){
+	xprintf("PITCH BEND SENS:ch%d val%d\n",ch,val);
+}
 void mgr_pitchbend(uint8_t ch,uint16_t val){
 	xprintf("PITCH BEND:ch%d val%d\n",ch,val);
 }
@@ -55,9 +59,13 @@ void mgr_all_notes_off(uint8_t ch){
 }
 
 void mgr_reset(void){
-	
+	xprintf("RESET!\n");
 }
 
 void mgr_sysex(uint8_t *arr,uint8_t size){
-	
+	xprintf("SYSEX:");
+	for(int i = 0;i < size;i++){
+		xprintf("%02x,",arr[i]);
+	}
+	xprintf("\n");
 }

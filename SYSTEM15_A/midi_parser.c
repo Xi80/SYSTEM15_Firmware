@@ -12,12 +12,12 @@ uint8_t ex_ptr;					/*エクスクルーシブ用ポインタ*/
 uint8_t ex_buffer[64];			/*エクスクルーシブ用バッファ*/
 uint8_t flag;					/*フラグ(bit0:3バイト目フラグ/bit1:SysExフラグ)*/
 uint8_t running_status_buffer;	/*ランニングステータスバッファ*/
-uint8_t rpn[2];					/*RPN*/
+uint8_t rpn[32];				/*RPN*/
 
 void init_midi_parser(void){
 	/*各種メモリの初期化*/
 	memset(&work_midi,0x00,3);
-	memset(&rpn,0x00,2);
+	memset(&rpn,0x7F,32);
 	ex_ptr					= 0x00;
 	flag					= 0x00;
 	running_status_buffer	= 0x00;
@@ -92,7 +92,41 @@ void parse_midi_data(uint8_t data){
 }
 
 void decode_midi_cc(void){
-	
+	switch(work_midi[1]){
+		case CC_MOD:
+			mgr_modulation(work_midi[0] & 0x0F,work_midi[2]);
+			break;
+		case CC_DE_MSB:
+			if((rpn[(work_midi[0] & 0x0F) << 1] | (rpn[((work_midi[0] & 0x0F) << 1) + 1] << 8) )== 0x0000)
+				mgr_pitchbend_sensitivity(work_midi[0] & 0x0F,work_midi[2]);
+			rpn[((work_midi[0] & 0x0F) << 1)] = 0x7F;
+			rpn[((work_midi[0] & 0x0F) << 1) + 1] = 0x7F;
+			break;
+		case CC_VOL:
+			mgr_volume(work_midi[0] & 0x0F,work_midi[2]);
+			break;
+		case CC_EXP:
+			mgr_expression(work_midi[0] & 0x0F,work_midi[2]);
+			break;
+		case CC_HOLD:
+			mgr_hold(work_midi[0] & 0x0F,work_midi[2]);
+			break;
+		case CC_RPN_LSB:
+			rpn[((work_midi[0] & 0x0F) << 1)] = work_midi[2];
+			break;
+		case CC_RPN_MSB:
+			rpn[((work_midi[0] & 0x0F) << 1) + 1] = work_midi[2];
+			break;
+		case CC_ASO:
+			mgr_all_sounds_off(work_midi[0] & 0x0F);
+			break;
+		case CC_RAC:
+			mgr_reset_all_controller(work_midi[0] & 0x0F);
+			break;
+		case CC_ANO:
+			mgr_all_notes_off(work_midi[0] & 0x0F);
+			break;		
+	}
 }
 
 void decode_midi_message(void){
@@ -119,5 +153,25 @@ void decode_midi_message(void){
 }
 
 void decode_exclusive(void){
-	
+	const uint8_t gm_reset[] = { 0x7E, 0x7F, 0x09, 0x01 };
+	const uint8_t xg_reset[] = { 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00 };
+	const uint8_t gs_reset[] = { 0x41, 0x10, 0x42, 0x12, 0x40, 0x00, 0x7F, 0x00, 0x41 };
+	const uint8_t gs_mode1[] = { 0x41, 0x10, 0x42, 0x12, 0x00, 0x00, 0x7F, 0x00, 0x01 };
+	if (!memcmp(ex_buffer, gm_reset, sizeof(gm_reset))) {
+		mgr_reset();
+	}
+
+	if (!memcmp(ex_buffer, gs_reset, sizeof(gs_reset))) {
+		mgr_reset();;
+	}
+
+	if (!memcmp(ex_buffer, gs_mode1, sizeof(gs_mode1))) {
+		mgr_reset();
+	}
+
+	if (!memcmp(ex_buffer, xg_reset, sizeof(xg_reset))) {
+		mgr_reset();
+	}
+	mgr_sysex(&ex_buffer[0],ex_ptr);
+	return;	
 }
