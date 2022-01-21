@@ -11,15 +11,17 @@
 
 #include <avr/io.h>
 #include <string.h>
+#include "midi_manager.h"
 
 void init_midi_parser(void);		/*MIDIパーサの初期化*/
 
-void parse_midi_data(void);			/*MIDIデータのパース*/
+void parse_midi_data(uint8_t);		/*MIDIデータのパース*/
 
 void decode_midi_message(void);		/*MIDIメッセージの解読*/
 
 void decode_exclusive(void);		/*SysExの解読*/
 
+void decode_midi_cc(void);			/*CCの解読*/
 /*マクロ*/
 #define MSG_SOX			0xF0
 #define MSG_EOX			0xF7
@@ -46,13 +48,6 @@ void decode_exclusive(void);		/*SysExの解読*/
 #define EX_88			0x02;
 #define EX_XG			0x03;
 #define EX_GM			0x04;
-
-/*構造体*/
-typedef struct {
-	uint8_t msg;
-	uint8_t ch;
-	uint8_t data[2];
-}midi_msg_t;
 
 /*グローバル変数*/
 

@@ -9,7 +9,7 @@
 
 /*モジュール読み込み*/
 #include "serial_manager.h"			//シリアル通信
-
+#include "midi_parser.h"
 
 /*割り込み処理*/
 ISR(USART0_RXC_vect)
@@ -33,7 +33,7 @@ int main(void)
     {
 		if(RingBuffer_GetCount(&midi_buffer)){
 			uint8_t data = RingBuffer_Remove(&midi_buffer);
-			xprintf("%02x\n",data);
+			parse_midi_data(data);
 		}
     }
 }
