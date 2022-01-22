@@ -84,7 +84,7 @@ void dva_note_on(uint8_t ch,uint8_t note,uint8_t vel){
 		uint16_t tone = calc_psg_tone(note,midi_channel[ch].pbs,midi_channel[ch].pb);
 		//xprintf("%02x %02x %d \n",psg_id,psg_ch,tone);
 		psg_set_mfreq(psg_id,psg_ch,tone);
-		psg_set_volume(psg_id,psg_ch,15);
+		psg_set_volume(psg_id,psg_ch,vel_curve[vel]);
 	}
 	
 	for(uint8_t i = 0; i < 16;i++){

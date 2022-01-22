@@ -16,4 +16,6 @@ uint16_t calc_psg_tone(uint8_t,uint8_t,uint16_t);		/*ノート番号,ピッチベンドセン
 
 
 const uint16_t psg_tone_table[768];
+
+const uint8_t vel_curve[128];
 #endif /* TONE_MANAGER_H_ */
