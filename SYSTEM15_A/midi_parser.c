@@ -21,6 +21,8 @@ void init_midi_parser(void){
 	ex_ptr					= 0x00;
 	flag					= 0x00;
 	running_status_buffer	= 0x00;
+	
+	init_midi_mgr();
 }
 
 void parse_midi_data(uint8_t data){

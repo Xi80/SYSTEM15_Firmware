@@ -23,6 +23,7 @@ ISR(USART0_RXC_vect)
 int main(void)
 {
 	init_serial();
+	init_midi_parser();
 	PORTA.DIR |= 0xF0;
 	
 	PORTA.OUT |= 0xF0;
@@ -31,6 +32,7 @@ int main(void)
 	xprintf("Hello,World!\n");
     while (1) 
     {
+		
 		if(RingBuffer_GetCount(&midi_buffer)){
 			uint8_t data = RingBuffer_Remove(&midi_buffer);
 			parse_midi_data(data);
