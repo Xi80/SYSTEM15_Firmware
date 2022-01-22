@@ -9,6 +9,8 @@
 //[15]は未使用
 voice_param_t voices[16];
 
+psg_param_t psgs[4];
+
 void init_dva(void){
 	for(uint8_t i = 0;i < 16;i++){
 		voices[i].assign_map = 0xFFFF;	/*全チャネルに対して割り当て可能*/
@@ -19,15 +21,19 @@ void init_dva(void){
 		voices[i].priority    = 0x00;
 		voices[i].sustain     = 0x00;
 	}
-	
+
 	for(uint8_t i = 12;i < 16;i++){
 		voices[i].assign_map = 0x0000;
 	}
 
-	xprintf("init dva\n");
 	for(uint8_t i = 0;i < 4;i++){
-		//psg_reset(i);
+		psg_reset(i);
 		psg_set_mixer(i,0b00111000);
+		psg_set_efreq(i,0b0001111010000100);
+		psgs[i].env_freq = 0b0001111010000100;
+		psgs[i].env_shape = 0xFF;
+		psgs[i].noise_freq = 0x00;
+		psgs[i].output = 0b00111111;
 	}
 	
 	psg_set_mfreq(0,0,TP_F(2000));
@@ -82,9 +88,16 @@ void dva_note_on(uint8_t ch,uint8_t note,uint8_t vel){
 		uint8_t psg_id = min_vo / 3;
 		uint8_t psg_ch = min_vo % 3;
 		uint16_t tone = calc_psg_tone(note,midi_channel[ch].pbs,midi_channel[ch].pb);
-		//xprintf("%02x %02x %d \n",psg_id,psg_ch,tone);
+		
 		psg_set_mfreq(psg_id,psg_ch,tone);
-		psg_set_volume(psg_id,psg_ch,vel_curve[vel]);
+		
+		if(midi_channel[ch].pgm != 0){
+			psg_set_volume(psg_id,psg_ch,0x10);
+			psg_set_envelope(psg_id,env_table[(midi_channel[ch].pgm - 1) % 10]);
+		} else {
+			psg_set_volume(psg_id,psg_ch,vol_curve[midi_channel[ch].exp >> 3][midi_channel[ch].vol >> 3]);
+		}
+		
 	}
 	
 	for(uint8_t i = 0; i < 16;i++){
@@ -118,7 +131,6 @@ void dva_note_off(uint8_t ch,uint8_t note){
 				uint8_t psg_id = off_vo / 3;
 				uint8_t psg_ch = off_vo % 3;
 				psg_set_volume(psg_id,psg_ch,0);
-				psg_set_mfreq(psg_id,psg_ch,0);
 			}
 		}
 	}
@@ -143,14 +155,61 @@ void dva_note_off(uint8_t ch,uint8_t note){
 		uint8_t psg_ch = off_vo % 3;
 		//uint16_t tone = calc_psg_tone(note,midi_channel[ch].pbs,midi_channel[ch].pb);
 		psg_set_volume(psg_id,psg_ch,0);
-		psg_set_mfreq(psg_id,psg_ch,0);
 	}	
 }
 
 void dva_pitchbend(uint8_t ch){
-	
+	for(uint8_t i = 0;i < 15;i++){
+		if(voices[i].assigned_ch == ch && voices[i].note_state){
+			if(i > 11){
+							
+				} else {
+				//PSG
+				uint8_t psg_id = i / 3;
+				uint8_t psg_ch = i % 3;
+				uint16_t tone = calc_psg_tone(voices[i].note_number,midi_channel[ch].pbs,midi_channel[ch].pb);
+				psg_set_mfreq(psg_id,psg_ch,tone);				
+			}
+		}
+	}
 }
 
-void dva_cc(uint8_t ch){
+void dva_vol(uint8_t ch){
+	uint8_t vol = vol_curve[midi_channel[ch].exp >> 3][midi_channel[ch].vol >> 3];
+	
+	for(uint8_t i = 0;i < 15;i++){
+		if(voices[i].assigned_ch == ch && voices[i].note_state){
+			if(i > 11){
+				
+				} else {
+				//PSG
+				uint8_t psg_id = i / 3;
+				uint8_t psg_ch = i % 3;
+				psg_set_volume(psg_id,psg_ch,vol);
+				
+			}
+		}
+	}
+}
+
+void dva_exp(uint8_t ch){
+	uint8_t vol = vol_curve[midi_channel[ch].exp >> 3][midi_channel[ch].vol >> 3];
+	
+	for(uint8_t i = 0;i < 15;i++){
+		if(voices[i].assigned_ch == ch && voices[i].note_state){
+			if(i > 11){
+				
+				} else {
+				//PSG
+				uint8_t psg_id = i / 3;
+				uint8_t psg_ch = i % 3;
+				psg_set_volume(psg_id,psg_ch,vol);
+				
+			}
+		}
+	}	
+}
+
+void dva_hold(uint8_t ch){
 	
 }

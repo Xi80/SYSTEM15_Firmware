@@ -49,6 +49,7 @@ void mgr_pitchbend_sensitivity(uint8_t ch,uint8_t val){
 void mgr_pitchbend(uint8_t ch,uint16_t val){
 	//xprintf("PITCH BEND:ch%d val%d\n",ch,val);
 	midi_channel[ch].pb = val;
+	dva_pitchbend(ch);
 }
 
 void mgr_modulation(uint8_t ch,uint8_t val){
@@ -59,12 +60,13 @@ void mgr_modulation(uint8_t ch,uint8_t val){
 void mgr_volume(uint8_t ch,uint8_t val){
 	//xprintf("VOLUME:ch%d val%d\n",ch,val);
 	midi_channel[ch].vol = val;
+	dva_vol(ch);
 }
 
 void mgr_expression(uint8_t ch,uint8_t val){
 	//xprintf("EXPRESSION:ch%d val%d\n",ch,val);
 	midi_channel[ch].exp = val;
-	
+	dva_exp(ch);
 }
 
 void mgr_hold(uint8_t ch,uint8_t val){

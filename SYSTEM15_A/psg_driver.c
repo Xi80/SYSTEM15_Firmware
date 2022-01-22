@@ -30,7 +30,7 @@ void psg_set_volume(uint8_t id,uint8_t ch,uint8_t vol){
 }
 
 void psg_set_envelope(uint8_t id,uint8_t shape){
-	psg_write(id,REG_ENV,shape);
+	psg_write(id,REG_ENV,(shape) & 0x0F);
 }
 
 void psg_reset(uint8_t id){

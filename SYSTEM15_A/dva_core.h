@@ -24,7 +24,11 @@ void dva_note_off(uint8_t,uint8_t);
 
 void dva_pitchbend(uint8_t);
 
-void dva_cc(uint8_t);
+void dva_vol(uint8_t);
+
+void dva_exp(uint8_t);
+
+void dva_hold(uint8_t);
 
 /*構造体*/
 typedef struct {
@@ -35,7 +39,13 @@ typedef struct {
 	uint8_t sustain;				/*サステイン状態か*/
 	uint8_t note_number;			/*ノートナンバー*/
 	uint16_t assign_map;			/*割り当て可能なチャネル*/
+
 }voice_param_t;
 
-
+typedef struct {
+	uint8_t env_shape;				/*エンベロープの形状、不使用なら0xFF*/
+	uint16_t env_freq;				/*エンベロープ周波数*/
+	uint8_t noise_freq;				/*ノイズ周波数*/
+	uint8_t output;					/*使用しているチャネル*/
+}psg_param_t;
 #endif /* DVA_CORE_H_ */
