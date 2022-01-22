@@ -12,7 +12,7 @@ uint16_t calc_psg_tone(uint8_t note,uint8_t pbs,uint16_t pb){
 	
 	uint16_t internal_tone = ((note + 3) << 6) + (dpb * pbs);
 	
-	xprintf("%d %d %d\n",pbs,pb,internal_tone);
+	//xprintf("%d %d %d\n",pbs,pb,internal_tone);
 	uint8_t oct = internal_tone / 768;
 	uint16_t tone = internal_tone - (oct * 768);
 	
