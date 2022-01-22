@@ -145,6 +145,12 @@
     <Compile Include="midi_parser.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="psg_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="psg_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="ringbuff.h">
       <SubType>compile</SubType>
     </Compile>
@@ -152,6 +158,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="serial_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="tone_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="tone_manager.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="xprintf.c">

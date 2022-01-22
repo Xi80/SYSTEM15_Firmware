@@ -11,6 +11,10 @@
 
 #include <avr/io.h>
 #include "midi_manager.h"
+#include "tone_manager.h"
+#include "psg_driver.h"
+#define F_CPU 3333333UL
+#include <util/delay.h>
 
 void init_dva(void);
 
