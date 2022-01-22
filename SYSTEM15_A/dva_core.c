@@ -46,7 +46,7 @@ void dva_note_on(uint8_t ch,uint8_t note,uint8_t vel){
 	midi_channel[ch].voice_count = 0;
 	for(uint8_t i = 0;i < 16;i++){
 		
-		if((voices[i].assign_map & (1 << ch)) && !voices[i].sustain){
+		if((voices[i].assign_map & (1 << ch)) && !voices[i].sustain && !voices[i].note_state){
 			
 			/*そのチャネルに対して割り当て可能*/
 			if(voices[i].priority <= min_prio){
@@ -109,16 +109,28 @@ void dva_note_off(uint8_t ch,uint8_t note){
 			off_prio = voices[i].priority;
 			off_vo = i;
 		}
+		
+		if(voices[i].sustain == 0x00 && voices[i].note_state == 0x00){
+			if(off_vo > 11){
+				/*FM*/
+				} else {
+				/*PSG*/
+				uint8_t psg_id = off_vo / 3;
+				uint8_t psg_ch = off_vo % 3;
+				psg_set_volume(psg_id,psg_ch,0);
+				psg_set_mfreq(psg_id,psg_ch,0);
+			}
+		}
 	}
 	 
-	 if(off_vo == 16)return;
+	if(off_vo == 16)return;
 	/*ノートオフ処理*/
 	voices[off_vo].note_state = 0;
 	voices[off_vo].priority = off_count;
 	for(uint8_t i = 0;i < 16;i++){
 		if((voices[i].assigned_ch == ch ) && voices[i].note_state){
 			if(voices[i].note_state){
-				voices[i].priority -= ((voices[i].priority > off_prio) && (voices[i].priority))? 1 : 0;
+				voices[i].priority += (voices[i].priority < off_prio)? 1 : 0;
 			}
 		}
 	}

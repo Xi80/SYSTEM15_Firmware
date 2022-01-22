@@ -9,6 +9,7 @@
 #ifndef PSG_DRIVER_H_
 #define PSG_DRIVER_H_
 
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include "xprintf.h"
 

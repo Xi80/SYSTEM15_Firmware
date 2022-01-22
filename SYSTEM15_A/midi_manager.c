@@ -12,7 +12,7 @@ void init_midi_mgr(void){
 	/*‚Ü‚¾*/
 	
 	for(uint8_t i = 0;i < 16;i++){
-		midi_channel[i].voice_assign = 15;
+		midi_channel[i].voice_assign = 3;
 		midi_channel[i].voice_count = 0;
 		midi_channel[i].pgm = 0;
 		midi_channel[i].mod = 0;

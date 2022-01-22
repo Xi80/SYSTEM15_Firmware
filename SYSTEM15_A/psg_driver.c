@@ -66,7 +66,7 @@ void write_addr(uint8_t addr){
 	PORTC.OUT &= ~(0x01);	//A0を0(アドレスライトモード)
 	PORTD.OUT = addr;		//アドレスをセット
 	PORTE.OUT &= ~(0x01);	//WRをアサート
-	for(uint16_t i = 0;i < 300;i++)asm("nop;");
+	for(uint16_t i = 0;i < 20;i++)asm("nop;");
 	PORTE.OUT |= 0x01;	//WRをネゲート
 }
 
@@ -74,7 +74,7 @@ void write_data(uint8_t data){
 	PORTC.OUT |= 0x01;		//A0を1(データライトモード)
 	PORTD.OUT = data;		//データをセット
 	PORTE.OUT &= ~(0x01);	//WRをアサート
-	for(uint16_t i = 0;i < 500;i++)asm("nop;");
+	for(uint16_t i = 0;i < 20;i++)asm("nop;");
 	PORTE.OUT |= 0x01;	//WRをネゲート
 }
 
@@ -84,8 +84,8 @@ void psg_write(uint8_t id,uint8_t addr,uint8_t data){
 	select_ic(id,1);
 	write_addr(addr);
 	select_ic(id,0);
-	for(uint16_t i = 0;i < 300;i++)asm("nop;");
+	for(uint16_t i = 0;i < 20;i++)asm("nop;");
 	select_ic(id,1);
 	write_data(data);
-	select_ic(id,0);
+	select_ic(id,0);;
 }
