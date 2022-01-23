@@ -11,9 +11,11 @@ voice_param_t voices[16];
 
 psg_param_t psgs[4];
 
+uint8_t fm_params[3][38];
+
 void init_dva(void){
 	for(uint8_t i = 0;i < 16;i++){
-		voices[i].assign_map = 0xFFFF;	/*全チャネルに対して割り当て可能*/
+		voices[i].assign_map = 0xFFFE;	/*全チャネルに対して割り当て可能*/
 		voices[i].assigned_ch = 0xFF;	/*どこにも割り当てない*/
 		voices[i].note_number = 0xFF;
 		voices[i].vel		 = 0x00;
@@ -22,8 +24,13 @@ void init_dva(void){
 		voices[i].sustain     = 0x00;
 	}
 
-	for(uint8_t i = 12;i < 16;i++){
-		voices[i].assign_map = 0x0000;
+	for(uint8_t i = 12;i < 15;i++){
+		voices[i].assign_map = 0x0001;
+	}
+	
+	voices[15].assign_map = 0x000;
+	for(uint8_t i = 0;i < 16;i++){
+		xprintf("%04x\n",voices[i].assign_map);
 	}
 
 	for(uint8_t i = 0;i < 4;i++){
@@ -37,6 +44,14 @@ void init_dva(void){
 	}
 	
 	init_timbre_mgr();
+	opn_reset();
+	load_timbre_rom(0,&fm_params[0][0]);
+	load_timbre_rom(0,&fm_params[1][0]);
+	load_timbre_rom(0,&fm_params[2][0]);
+	
+	for(uint8_t i = 0;i < 3;i++){
+		opn_pgm_set(i,&fm_params[i][0]);
+	}
 	
 	psg_set_mfreq(0,0,TP_F(2000));
 	psg_set_volume(0,0,15);
@@ -50,7 +65,7 @@ void dva_note_on(uint8_t ch,uint8_t note,uint8_t vel){
 	uint8_t min_prio = 16;
 	uint8_t min_vo   = 16;
 	
-	
+	xprintf("%02x\n",ch);
 	midi_channel[ch].voice_count = 0;
 	for(uint8_t i = 0;i < 16;i++){
 		
@@ -84,6 +99,9 @@ void dva_note_on(uint8_t ch,uint8_t note,uint8_t vel){
 	voices[min_vo].priority = midi_channel[ch].voice_count;
 	
 	if(min_vo > 11){
+		uint8_t opn_ch = min_vo - 12;
+		opn_set_fnum(opn_ch,calc_fm_tone(note,midi_channel[ch].pbs,midi_channel[ch].pb));
+		opn_note_on(opn_ch,0x0F);
 		/*FM*/
 	} else {
 		/*PSG*/
@@ -124,17 +142,18 @@ void dva_note_off(uint8_t ch,uint8_t note){
 			off_prio = voices[i].priority;
 			off_vo = i;
 		}
-		
+		/*
 		if(voices[i].sustain == 0x00 && voices[i].note_state == 0x00){
-			if(off_vo > 11){
-				/*FM*/
+			if(i > 11){
+					uint8_t opn_ch = i - 12;
+					opn_note_off(opn_ch,0x0F);
 				} else {
-				/*PSG*/
-				uint8_t psg_id = off_vo / 3;
-				uint8_t psg_ch = off_vo % 3;
-				psg_set_volume(psg_id,psg_ch,0);
+					uint8_t psg_id = i / 3;
+					uint8_t psg_ch = i % 3;
+					psg_set_volume(psg_id,psg_ch,0);
 			}
 		}
+		*/
 	}
 	 
 	if(off_vo == 16)return;
@@ -151,6 +170,8 @@ void dva_note_off(uint8_t ch,uint8_t note){
 	
 	if(off_vo > 11){
 		/*FM*/
+		uint8_t opn_ch = off_vo - 12;
+		opn_note_off(opn_ch,0x0F);
 	} else {
 		/*PSG*/
 		uint8_t psg_id = off_vo / 3;

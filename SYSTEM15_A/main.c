@@ -50,19 +50,20 @@ int main(void)
 	init_io();
 	reset_ic();
 	init_midi_parser();
-	uint8_t test[38] = {
-		 5,7,
-		 20, 0, 0, 0, 0,27, 0, 1, 0,
-		 15, 3, 0, 6, 1, 5, 0, 2, 1,
-		 14, 4, 0, 6, 1, 5, 0, 1, 2,
-		 15, 4, 0, 6, 1, 5, 0, 1, 3,
-	};
-
     /* Replace with your application code */
 	xprintf("Hello,World!\n");
-
+	//ar dr sr rr sl tl ks ml td
+	uint8_t p[38] = {
+		3,7,
+		31, 0, 0, 7, 0,35, 0, 4, 0,
+		25,14, 0, 4, 2,42, 0, 4, 0,
+		31, 0, 0, 8, 0,38, 0, 2, 0,
+		18, 7, 0, 8, 1, 0, 0, 1, 0,
+	};
 	
-    while (1) 
+	store_timbre_rom(0,p);
+    
+	while (1) 
     {
 		
 		if(RingBuffer_GetCount(&midi_buffer)){

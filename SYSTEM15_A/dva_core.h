@@ -51,4 +51,6 @@ typedef struct {
 	uint8_t noise_freq;				/*ノイズ周波数*/
 	uint8_t output;					/*使用しているチャネル*/
 }psg_param_t;
+
+
 #endif /* DVA_CORE_H_ */
