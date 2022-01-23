@@ -12,7 +12,10 @@
 #include <avr/io.h>
 #include "midi_manager.h"
 #include "tone_manager.h"
+#include "opn_driver.h"
 #include "psg_driver.h"
+#include "timbre_manager.h"
+
 #define F_CPU 3333333UL
 #include <util/delay.h>
 

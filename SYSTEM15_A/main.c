@@ -50,10 +50,18 @@ int main(void)
 	init_io();
 	reset_ic();
 	init_midi_parser();
-	
-	
+	uint8_t test[38] = {
+		 5,7,
+		 20, 0, 0, 0, 0,27, 0, 1, 0,
+		 15, 3, 0, 6, 1, 5, 0, 2, 1,
+		 14, 4, 0, 6, 1, 5, 0, 1, 2,
+		 15, 4, 0, 6, 1, 5, 0, 1, 3,
+	};
+
     /* Replace with your application code */
 	xprintf("Hello,World!\n");
+
+	
     while (1) 
     {
 		

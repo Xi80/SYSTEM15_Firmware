@@ -36,6 +36,8 @@ void init_dva(void){
 		psgs[i].output = 0b00111111;
 	}
 	
+	init_timbre_mgr();
+	
 	psg_set_mfreq(0,0,TP_F(2000));
 	psg_set_volume(0,0,15);
 	_delay_ms(100);

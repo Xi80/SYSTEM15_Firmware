@@ -52,7 +52,7 @@ void psg_reset(uint8_t id){
 	psg_write(id,0x0d, 0);	
 }
 
-void select_ic(uint8_t id,uint8_t state){
+void psg_select_ic(uint8_t id,uint8_t state){
 	if(state){
 		//アサート
 		PORTC.OUT &= ~(0x02 << id);
@@ -62,7 +62,7 @@ void select_ic(uint8_t id,uint8_t state){
 	}
 }
 
-void write_addr(uint8_t addr){
+void psg_write_addr(uint8_t addr){
 	PORTC.OUT &= ~(0x01);	//A0を0(アドレスライトモード)
 	PORTD.OUT = addr;		//アドレスをセット
 	PORTE.OUT &= ~(0x01);	//WRをアサート
@@ -70,7 +70,7 @@ void write_addr(uint8_t addr){
 	PORTE.OUT |= 0x01;	//WRをネゲート
 }
 
-void write_data(uint8_t data){
+void psg_write_data(uint8_t data){
 	PORTC.OUT |= 0x01;		//A0を1(データライトモード)
 	PORTD.OUT = data;		//データをセット
 	PORTE.OUT &= ~(0x01);	//WRをアサート
@@ -81,11 +81,11 @@ void write_data(uint8_t data){
 
 void psg_write(uint8_t id,uint8_t addr,uint8_t data){
 	//xprintf("WRITE %02x %02x %02x\n",id,addr,data);
-	select_ic(id,1);
-	write_addr(addr);
-	select_ic(id,0);
+	psg_select_ic(id,1);
+	psg_write_addr(addr);
+	psg_select_ic(id,0);
 	//for(uint16_t i = 0;i < 20;i++)asm("nop;");
-	select_ic(id,1);
-	write_data(data);
-	select_ic(id,0);;
+	psg_select_ic(id,1);
+	psg_write_data(data);
+	psg_select_ic(id,0);;
 }
