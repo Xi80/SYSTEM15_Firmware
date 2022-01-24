@@ -81,6 +81,15 @@ void opn_write(uint8_t addr,uint8_t data){
 
 void opn_reset(void){
 	//“Á‚É‰½‚à‚µ‚È‚¢(¡‚Ì‚Æ‚±‚ë‚Í)
+	opn_write(0x07,0xC0);
+}
+
+void led_show(uint16_t data){
+	//PA4~6 OPN
+	//PB0~7,PA0~3 PSG
+	//(PSG)OPN-->PB PA
+	opn_write(0x0F,(data & 0xFF00)>>8);
+	opn_write(0x0E,(data & 0x00FF));
 }
 
 void opn_note_on(uint8_t  ch,uint8_t op){

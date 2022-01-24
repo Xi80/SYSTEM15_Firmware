@@ -32,37 +32,15 @@ void init_io(void){
 	PORTD.OUT = 0x00;		//データバスを0x00に
 }
 
-void reset_ic(void){
-	PORTE.OUT &= ~(0x04);	//ICをアサート
-	for(uint16_t i = 0;i < 1024;i++){
-		asm("nop;");
-	}
-	PORTE.OUT |= 0x04;		//ICをネゲート
-	for(uint16_t i = 0;i < 16384;i++){
-		asm("nop;");
-	}
-}
 
 
 int main(void)
 {
 	init_serial();
 	init_io();
-	reset_ic();
 	init_midi_parser();
     /* Replace with your application code */
-	xprintf("Hello,World!\n");
-	//ar dr sr rr sl tl ks ml td
-	uint8_t p[38] = {
-		3,7,
-		31, 0, 0, 7, 0,35, 0, 4, 0,
-		25,14, 0, 4, 2,42, 0, 4, 0,
-		31, 0, 0, 8, 0,38, 0, 2, 0,
-		18, 7, 0, 8, 1, 0, 0, 1, 0,
-	};
 	
-	store_timbre_rom(0,p);
-    
 	while (1) 
     {
 		

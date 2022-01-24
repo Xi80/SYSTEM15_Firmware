@@ -160,20 +160,21 @@ void decode_exclusive(void){
 	const uint8_t gs_reset[] = { 0x41, 0x10, 0x42, 0x12, 0x40, 0x00, 0x7F, 0x00, 0x41 };
 	const uint8_t gs_mode1[] = { 0x41, 0x10, 0x42, 0x12, 0x00, 0x00, 0x7F, 0x00, 0x01 };
 	if (!memcmp(ex_buffer, gm_reset, sizeof(gm_reset))) {
-		mgr_reset();
+		mgr_reset(0);
 	}
 
 	if (!memcmp(ex_buffer, gs_reset, sizeof(gs_reset))) {
-		mgr_reset();;
+		mgr_reset(1);;
 	}
 
 	if (!memcmp(ex_buffer, gs_mode1, sizeof(gs_mode1))) {
-		mgr_reset();
+		mgr_reset(2);
 	}
 
 	if (!memcmp(ex_buffer, xg_reset, sizeof(xg_reset))) {
-		mgr_reset();
+		mgr_reset(3);
 	}
+	
 	mgr_sysex(&ex_buffer[0],ex_ptr);
 	return;	
 }

@@ -33,6 +33,43 @@ void dva_exp(uint8_t);
 
 void dva_hold(uint8_t);
 
+void dva_program_change(uint8_t);
+
+void dva_reset(uint8_t);
+
+void dva_reset_ic(void);
+
+void dva_all_sounds_off(uint8_t);
+
+void dva_all_notes_off(uint8_t);
+
+void dva_reset_all_controller(uint8_t);
+
+void dva_change_assign(uint8_t*);
+
+void dva_all_sounds_off(uint8_t ch);
+	
+void dva_all_notes_off(uint8_t ch);
+	
+void dva_reset_all_controller(uint8_t ch);
+	
+void dva_change_assign(uint8_t *data);
+	
+void dva_change_mixer(uint8_t* data);
+
+void dva_change_envelope(uint8_t *data);
+	
+void dva_change_envelope_freq(uint8_t *data);
+	
+void dva_transfer_opn_voice(uint8_t *data);
+	
+void dva_save_opn_voice(uint8_t *data);
+
+void dva_load_opn_voice(uint8_t *data);
+	
+void dva_change_opn_voice(uint8_t ch,uint8_t pos,uint8_t val);
+	
+
 /*構造体*/
 typedef struct {
 	uint8_t assigned_ch;			/*割り当てられているチャネル*/
@@ -52,5 +89,10 @@ typedef struct {
 	uint8_t output;					/*使用しているチャネル*/
 }psg_param_t;
 
+
+#define _BYTE1(x) (  x        & 0xFF )
+#define _BYTE2(x) ( (x >>  8) & 0xFF )
+
+#define BYTE_SWAP_16(x) ((uint16_t)( _BYTE1(x)<<8 | _BYTE2(x) ))
 
 #endif /* DVA_CORE_H_ */
